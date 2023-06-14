@@ -2,5 +2,25 @@
   <select [(ngModel)]="selectedSite" (ngModelChange)="onChange()">
     <option *ngFor="let site of sites" [value]="site">{{ site.name }}</option>
   </select>
-  <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onChange()"/>
+  <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onChange()" />
+  <div>
+    <span *ngIf="loading">Loading...</span>
+    <table *ngIf="!loading && availabilities !== undefined">
+      <thead>
+        <tr>
+          <th>Tickets</th>
+          <th *ngFor="let name of sessionNames">{{ name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr *ngFor="let ticket of availabilities.products">
+          <td>
+            {{ ticket.name }}
+          </td>
+          <td *ngFor="let name of sessionNames">{{ bookings[ticket.name!][name] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
