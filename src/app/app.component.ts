@@ -18,7 +18,7 @@ export class AppComponent {
   availabilities?: Availabilities;
   loading = false;
   sessionNames: string[] = [];
-  bookings: { [name: string]: { [sessionName: string]: number } } = {}
+  bookings: { [name: string]: { [sessionName: string]: { count: number, restricted: boolean, full: boolean } } } = {}
 
   constructor(private rollerService: RollerService) {
   }
@@ -37,7 +37,11 @@ export class AppComponent {
           this.bookings[ticketName] = {};
           p.sessions?.forEach(s => {
             if (s.name) {
-              this.bookings[ticketName][s.name] = s.bookedQuantity ?? 0;
+              this.bookings[ticketName][s.name] = {
+                count: s.bookedQuantity ?? 0,
+                restricted: s.isRestricted ?? false,
+                full: s.isSessionCapacityFull ?? false
+              }
               uniqueNames.add(s.name);
             }
           });

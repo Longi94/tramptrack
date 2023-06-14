@@ -18,7 +18,11 @@
           <td>
             {{ ticket.name }}
           </td>
-          <td *ngFor="let name of sessionNames">{{ bookings[ticket.name!][name] }}</td>
+          <td *ngFor="let name of sessionNames">{{
+            bookings[ticket.name!][name]?.full ? 'F' :
+            bookings[ticket.name!][name]?.restricted ? 'R' :
+            bookings[ticket.name!][name]?.count
+            }}</td>
         </tr>
       </tbody>
     </table>
