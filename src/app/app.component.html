@@ -1,7 +1,9 @@
 <div>
+  <label>Location: </label>
   <select [(ngModel)]="selectedSite" (ngModelChange)="onChange()">
-    <option *ngFor="let site of sites" [value]="site">{{ site.name }}</option>
+    <option *ngFor="let site of sites" [value]="site.apiKey">{{ site.name }}</option>
   </select>
+  <label>Date: </label>
   <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onChange()" />
   <div>
     <span *ngIf="loading">Loading...</span>
@@ -18,7 +20,7 @@
           <td>
             {{ ticket.name }}
           </td>
-          <td *ngFor="let name of sessionNames">{{
+          <td class="center-align" *ngFor="let name of sessionNames">{{
             bookings[ticket.name!][name]?.full ? 'F' :
             bookings[ticket.name!][name]?.restricted ? 'R' :
             bookings[ticket.name!][name]?.count

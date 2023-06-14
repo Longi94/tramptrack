@@ -10,24 +10,29 @@ import { Availabilities } from './roller/availabilities';
 })
 export class AppComponent {
 
-  selectedDate: string = new Date().toDateString();
+  selectedDate: string = new Date().toISOString().substring(0, 10);
 
   sites = SITES;
-  selectedSite: Site = SITES[0];
+  selectedSite: string = SITES[0].apiKey;
 
   availabilities?: Availabilities;
   loading = false;
   sessionNames: string[] = [];
-  bookings: { [name: string]: { [sessionName: string]: { count: number, restricted: boolean, full: boolean } } } = {}
+  bookings: { [name: string]: { [sessionName: string]: { count: number, restricted: boolean, full: boolean } | undefined } } = {}
 
   constructor(private rollerService: RollerService) {
+    this.onChange();
   }
 
   onChange() {
+    const site = this.sites.find(s => s.apiKey === this.selectedSite);
+    if (site === undefined) {
+      return;
+    }
     this.loading = true;
     this.sessionNames = [];
     this.bookings = {};
-    this.rollerService.getAvailabilities(this.selectedSite, new Date(this.selectedDate)).subscribe(
+    this.rollerService.getAvailabilities(this.sites.find(s => s.apiKey === this.selectedSite)!, new Date(this.selectedDate)).subscribe(
       avail => {
         this.availabilities = avail;
 
