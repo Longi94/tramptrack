@@ -1,10 +1,15 @@
 <div>
-  <label>Location: </label>
-  <select [(ngModel)]="selectedSite" (ngModelChange)="onChange()">
-    <option *ngFor="let site of sites" [value]="site.apiKey">{{ site.name }}</option>
-  </select>
-  <label>Date: </label>
-  <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onChange()" />
+  <div class="form-div">
+
+    <label>Location: <select [(ngModel)]="selectedSite" (ngModelChange)="onChange()">
+        <option *ngFor="let site of sites" [value]="site.apiKey">{{ site.name }}</option>
+      </select></label>
+    <label>Date: <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onChange()" /></label>
+
+    <label>Considering Location: <input type="checkbox" [(ngModel)]="consideringLocation"
+        (ngModelChange)="onChange()" /></label>
+
+  </div>
   <div>
     <span *ngIf="loading">Loading...</span>
     <table *ngIf="!loading && availabilities !== undefined">
@@ -15,16 +20,6 @@
         </tr>
       </thead>
       <tbody>
-
-        <tr>
-          <td>Total</td>
-
-          <td [class]="'center-align ' +
-          (totals[name] === 0 ? 'booking-empty ' : '') +
-          (totals[name] > 0 ? 'booking-few ' : '') +
-          (totals[name] > 10 ? 'booking-many ' : '')" *ngFor="let name of sessionNames">{{ totals[name] }}</td>
-        </tr>
-
         <tr *ngFor="let ticket of availabilities.products">
           <td>
             {{ ticket.name }}

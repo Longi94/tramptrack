@@ -15,11 +15,12 @@ export class AppComponent {
   sites = SITES;
   selectedSite: string = SITES[0].apiKey;
 
+  consideringLocation: boolean = true;
+
   availabilities?: Availabilities;
   loading = false;
   sessionNames: string[] = [];
   bookings: { [name: string]: { [sessionName: string]: { count: number, restricted: boolean, full: boolean } | undefined } } = {}
-  totals: { [name: string]: number } = {}
 
   constructor(private rollerService: RollerService) {
     this.onChange();
@@ -33,7 +34,6 @@ export class AppComponent {
     this.loading = true;
     this.sessionNames = [];
     this.bookings = {};
-    this.totals = {};
 
     this.rollerService.getAvailabilities(this.sites.find(s => s.apiKey === this.selectedSite)!, new Date(this.selectedDate)).subscribe(
       avail => {
@@ -45,12 +45,8 @@ export class AppComponent {
           this.bookings[ticketName] = {};
           p.sessions?.forEach(s => {
             if (s.name) {
-              if (!(s.name in this.totals)) {
-                this.totals[s.name] = 0;
-              }
-              this.totals[s.name] += s.bookedQuantity ?? 0;
               this.bookings[ticketName][s.name] = {
-                count: s.bookedQuantity ?? 0,
+                count: (this.consideringLocation ? s.productBookedQuantityConsideringLocation : s.bookedQuantity) ?? 0,
                 restricted: s.isRestricted ?? false,
                 full: s.isSessionCapacityFull ?? false
               }
