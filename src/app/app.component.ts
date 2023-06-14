@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RollerService } from './roller/roller.service';
+import { SITES, Site } from './site/sites';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent {
-  title = 'tramptrack';
+
+  @Input() selectedDate: string = new Date().toDateString();
+
+  sites = SITES;
+  selectedSite: Site = SITES[0];
+
+  constructor(private rollerService: RollerService) {
+  }
+
+  onChange() {
+    this.rollerService.getAvailabilities(this.selectedSite, new Date(this.selectedDate)).subscribe(
+      console.log
+    );
+  }
 }
