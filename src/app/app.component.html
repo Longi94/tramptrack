@@ -16,6 +16,15 @@
       </thead>
       <tbody>
 
+        <tr>
+          <td>Total</td>
+
+          <td [class]="'center-align ' +
+          (totals[name] === 0 ? 'booking-empty ' : '') +
+          (totals[name] > 0 ? 'booking-few ' : '') +
+          (totals[name] > 10 ? 'booking-many ' : '')" *ngFor="let name of sessionNames">{{ totals[name] }}</td>
+        </tr>
+
         <tr *ngFor="let ticket of availabilities.products">
           <td>
             {{ ticket.name }}
@@ -25,14 +34,15 @@
               (bookings[ticket.name!][name] === undefined ? 'booking-no-data ' : '') +
               (bookings[ticket.name!][name]?.count === 0 ? 'booking-empty ' : '') +
               ((bookings[ticket.name!][name]?.count ?? 0) > 0 ? 'booking-few ' : '') +
-              ((bookings[ticket.name!][name]?.count ?? 0) > 10 ? 'booking-many ' : '')" *ngFor="let name of sessionNames">
+              ((bookings[ticket.name!][name]?.count ?? 0) > 10 ? 'booking-many ' : '')"
+            *ngFor="let name of sessionNames">
             <span *ngIf="bookings[ticket.name!][name] === undefined">X</span>
             <span *ngIf="bookings[ticket.name!][name] !== undefined">
               {{ bookings[ticket.name!][name]?.count }}
               {{ bookings[ticket.name!][name]?.full ? 'F' : '' }}
               {{ bookings[ticket.name!][name]?.restricted ? 'R' : '' }}
             </span>
-        </td>
+          </td>
         </tr>
       </tbody>
     </table>
