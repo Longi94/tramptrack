@@ -4,8 +4,9 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Availabilities } from './availabilities';
 import { Site } from '../site/sites';
+import { environment } from '../../environments/environment';
 
-const BASE_URL = 'http://localhost:8080/api'
+const BASE_URL = `${environment.apiUrl}/api`
 
 function dateToStringParam(date: Date): string {
   return `${date.getFullYear()}${("0" + (date.getMonth() + 1)).slice(-2)}${("0" + date.getDate()).slice(-2)}`;
