@@ -3,6 +3,13 @@ import { RollerService } from './roller/roller.service';
 import { SITES, Site } from './site/sites';
 import { Availabilities } from './roller/availabilities';
 
+type CellData = {
+  count: number,
+  countConsideringLocation: number,
+  restricted: boolean,
+  full: boolean
+} | undefined;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -20,10 +27,27 @@ export class AppComponent {
   availabilities?: Availabilities;
   loading = false;
   sessionNames: string[] = [];
-  bookings: { [name: string]: { [sessionName: string]: { count: number, restricted: boolean, full: boolean } | undefined } } = {}
+  bookings: { [name: string]: { [sessionName: string]: CellData } } = {}
 
   constructor(private rollerService: RollerService) {
     this.onChange();
+  }
+
+  getCellClass(data: CellData): string {
+    if (data === undefined) {
+      return 'booking-no-data';
+    }
+    if (data.full) {
+      return 'booking-full';
+    }
+    const count = this.consideringLocation ? data.countConsideringLocation : data.count;
+    if (count > 10) {
+      return 'booking-many';
+    }
+    if (count > 0) {
+      return 'booking-few';
+    }
+    return 'booking-empty';
   }
 
   onChange() {
@@ -46,7 +70,8 @@ export class AppComponent {
           p.sessions?.forEach(s => {
             if (s.name) {
               this.bookings[ticketName][s.name] = {
-                count: (this.consideringLocation ? s.productBookedQuantityConsideringLocation : s.bookedQuantity) ?? 0,
+                count: s.bookedQuantity ?? 0,
+                countConsideringLocation: s.productBookedQuantityConsideringLocation ?? 0,
                 restricted: s.isRestricted ?? false,
                 full: s.isSessionCapacityFull ?? false
               }
