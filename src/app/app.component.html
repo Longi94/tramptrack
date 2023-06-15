@@ -1,12 +1,19 @@
 <div>
   <div class="form-div">
 
-    <label>Location: <select [(ngModel)]="selectedSite" (ngModelChange)="onChange()">
+    <label>Location:
+      <select [(ngModel)]="selectedSite" (ngModelChange)="onChange()">
         <option *ngFor="let site of sites" [value]="site.apiKey">{{ site.name }}</option>
-      </select></label>
+      </select>
+    </label>
     <label>Date: <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onChange()" /></label>
 
-    <label>Considering Location: <input type="checkbox" [(ngModel)]="consideringLocation" /></label>
+    <label>Data Point:
+      <select [(ngModel)]="dataPoint">
+        <option value="consideringLocation">Number of people you'll encounter</option>
+        <option value="bookingCount">Number of tickets booked</option>
+      </select>
+    </label>
 
   </div>
   <div>
@@ -23,11 +30,11 @@
           <td>
             {{ ticket.name }}
           </td>
-          <td [class]="'center-align ' + getCellClass(bookings[ticket.name!][name])"
-            *ngFor="let name of sessionNames">
+          <td [class]="'center-align ' + getCellClass(bookings[ticket.name!][name])" *ngFor="let name of sessionNames">
             <span *ngIf="bookings[ticket.name!][name] === undefined">X</span>
             <span *ngIf="bookings[ticket.name!][name] !== undefined">
-              {{ consideringLocation ? bookings[ticket.name!][name]?.countConsideringLocation : bookings[ticket.name!][name]?.count }}
+              {{ dataPoint === 'consideringLocation' ? bookings[ticket.name!][name]?.countConsideringLocation :
+              bookings[ticket.name!][name]?.count }}
               {{ bookings[ticket.name!][name]?.full ? 'F' : '' }}
               {{ bookings[ticket.name!][name]?.restricted ? 'R' : '' }}
             </span>

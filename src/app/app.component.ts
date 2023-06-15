@@ -22,7 +22,7 @@ export class AppComponent {
   sites = SITES;
   selectedSite: string = SITES[0].apiKey;
 
-  consideringLocation: boolean = true;
+  dataPoint: string = 'consideringLocation';
 
   availabilities?: Availabilities;
   loading = false;
@@ -40,7 +40,7 @@ export class AppComponent {
     if (data.full) {
       return 'booking-full';
     }
-    const count = this.consideringLocation ? data.countConsideringLocation : data.count;
+    const count = this.dataPoint === "consideringLocation" ? data.countConsideringLocation : data.count;
     if (count > 10) {
       return 'booking-many';
     }
