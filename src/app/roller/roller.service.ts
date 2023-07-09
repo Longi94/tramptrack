@@ -19,11 +19,16 @@ export class RollerService {
   constructor(private http: HttpClient) { }
 
   getAvailabilities(site: Site, date: Date): Observable<Availabilities> {
+    const params: {[param: string]: string} = {
+      endDateIndex: dateToStringParam(date),
+      startDateIndex: dateToStringParam(date)
+    }
+    if (site.group) {
+      params['group'] = site.group;
+    }
+
     return this.http.get<Availabilities>(`${BASE_URL}/products/availabilities/widget`, {
-      params: {
-        endDateIndex: dateToStringParam(date),
-        startDateIndex: dateToStringParam(date)
-      },
+      params,
       headers: {
         'X-Api-Key': site.apiKey
       },
